@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pair Device - ICON-X MD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header p {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            font-size: 1em;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .form-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group .hint {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .btn-pair {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-pair:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-pair:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-back {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-back:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .status-message {
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .status-message.success {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-message.error {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status-message.info {
+            display: block;
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .loader.show {
+            display: block;
+        }
+        
+        .loader .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .code-display {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .code-display.show {
+            display: block;
+        }
+        
+        .code-display .code {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            letter-spacing: 5px;
+            font-family: monospace;
+        }
+        
+        .code-display .instruction {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Pair Device</h1>
+            <p>Connect your WhatsApp to ICON-X MD</p>
+        </div>
+        
+        <form id="pairForm">
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input 
+                    type="tel" 
+                    id="phoneNumber" 
+                    placeholder="e.g., 263781328870"
+                    required
+                    autocomplete="tel"
+                    pattern="[0-9]+"
+                >
+                <div class="hint">Enter your phone number without + or spaces</div>
+            </div>
+            
+            <button type="submit" class="btn-pair" id="pairBtn">
+                🔗 Send Pairing Code
+            </button>
+        </form>
+        
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px; color: #666;">Sending pairing code...</p>
+        </div>
+        
+        <div class="code-display" id="codeDisplay">
+            <p style="color: #666; margin-bottom: 10px;">Your Pairing Code:</p>
+            <div class="code" id="pairCode">------</div>
+            <div class="instruction">
+                📝 Open WhatsApp → Settings → Linked Devices → Link with Phone Number
+            </div>
+        </div>
+        
+        <div class="status-message" id="statusMessage"></div>
+        
+        <button class="btn-back" onclick="window.location.href='/'">
+            ← Back to Home
+        </button>
+    </div>
+    
+    <script>
+        document.getElementById('pairForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const pairBtn = document.getElementById('pairBtn');
+            const loader = document.getElementById('loader');
+            const statusMessage = document.getElementById('statusMessage');
+            const codeDisplay = document.getElementById('codeDisplay');
+            
+            // Validate input
+            if (!phoneNumber || phoneNumber.length < 10) {
+                statusMessage.textContent = '⚠️ Please enter a valid phone number.';
+                statusMessage.className = 'status-message error';
+                return;
+            }
+            
+            // Disable button and show loader
+            pairBtn.disabled = true;
+            pairBtn.textContent = 'Processing...';
+            loader.className = 'loader show';
+            statusMessage.className = 'status-message';
+            statusMessage.textContent = '';
+            codeDisplay.className = 'code-display';
+            
+            try {
+                const response = await fetch('/pair', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phoneNumber }),
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show success
+                    statusMessage.textContent = '✅ Pairing code sent successfully!';
+                    statusMessage.className = 'status-message success';
+                    
+                    // Show code
+                    document.getElementById('pairCode').textContent = data.code;
+                    codeDisplay.className = 'code-display show';
+                    
+                    // Auto-open WhatsApp
+                    setTimeout(() => {
+                        window.open(`https://wa.me/${phoneNumber}`, '_blank');
+                    }, 1000);
+                    
+                } else {
+                    statusMessage.textContent = `❌ Error: ${data.error || 'Failed to send code'}`;
+                    statusMessage.className = 'status-message error';
+                }
+                
+            } catch (error) {
+                statusMessage.textContent = `❌ Network error: ${error.message}`;
+                statusMessage.className = 'status-message error';
+            } finally {
+                // Re-enable button
+                pairBtn.disabled = false;
+                pairBtn.textContent = '🔗 Send Pairing Code';
+                loader.className = 'loader';
+            }
+        });
+        
+        // Auto-format phone number
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+</body>
+</html>

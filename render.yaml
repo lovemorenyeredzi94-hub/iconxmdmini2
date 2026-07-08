@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: icon-x-md-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 18.17.0
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8000
+      - key: PREFIX
+        value: .
+      - key: OWNER_NUMBER
+        value: 263781328870
+      - key: AUTO_VIEW_STATUS
+        value: true
+      - key: AUTO_LIKE_STATUS
+        value: true
+      - key: KEEP_ALIVE_INTERVAL
+        value: 240000
+      - key: PRESENCE_INTERVAL
+        value: 60000
+      - key: RECONNECT_DELAY
+        value: 3000
+    disks:
+      - name: session-data
+        mountPath: /app/session
+        sizeGB: 1
+      - name: database-data
+        mountPath: /app/database
+        sizeGB: 1
